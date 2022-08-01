@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
-import { connect } from 'react-redux'
-import { setProducts as setProductsAction } from './actions';
-
+import { setProducts } from './actions';
+import { useSelector, useDispatch } from 'react-redux';
 import { Col } from 'antd/lib/grid';
 import Searcher from './components/Searcher';
 import logo from './statics/logo.svg';
@@ -10,15 +9,15 @@ import './App.css';
 import { getProducts } from './api';
 import ProductList from './components/ProductList';
 
-function App({products, setProducts}) {
-console.log("🚀 ~ file: App.js ~ line 14 ~ App ~ products", products)
+function App() {
 
-  // const [products, setProducts] = useState([]);
+  const products = useSelector(state => state.products);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchProducts = async () => {
       const productsRes = await getProducts();
-      setProducts(productsRes);
+      dispatch(setProducts(productsRes));
     };
 
     fetchProducts();
@@ -37,11 +36,5 @@ console.log("🚀 ~ file: App.js ~ line 14 ~ App ~ products", products)
   );
 }
 
-const mapStateToProps = (state) => ({
-  products: state.products
-});
-const mapDispatchToProps = (dispatch) => ({
-  setProducts: (value) => dispatch(setProductsAction(value))
-});
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

@@ -1,4 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { connect } from 'react-redux'
+import { setProducts as setProductsAction } from './actions';
+
 import { Col } from 'antd/lib/grid';
 import Searcher from './components/Searcher';
 import logo from './statics/logo.svg';
@@ -7,15 +10,14 @@ import './App.css';
 import { getProducts } from './api';
 import ProductList from './components/ProductList';
 
-function App() {
+function App({products, setProducts}) {
+console.log("🚀 ~ file: App.js ~ line 14 ~ App ~ products", products)
 
-  const [products, setProducts] = useState([]);
+  // const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       const productsRes = await getProducts();
-      console.log("🚀 ~ file: App.js ~ line 17 ~ fetchProducts ~ productsRes", productsRes)
-      
       setProducts(productsRes);
     };
 
@@ -35,4 +37,11 @@ function App() {
   );
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+  products: state.products
+});
+const mapDispatchToProps = (dispatch) => ({
+  setProducts: (value) => dispatch(setProductsAction(value))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

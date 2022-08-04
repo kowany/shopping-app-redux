@@ -1,23 +1,31 @@
 import { useEffect } from 'react';
-import { setProducts } from './actions';
+
+import { setLoading, setProducts } from './actions';
 import { useSelector, useDispatch } from 'react-redux';
-import { Col } from 'antd/lib/grid';
+import { Col, Spin } from 'antd';
 import Searcher from './components/Searcher';
 import logo from './statics/logo.svg';
 
-import './App.css';
 import { getProducts } from './api';
 import ProductList from './components/ProductList';
+// import { SET_LOADING } from './actions/types';
+import './App.css';
 
 function App() {
 
-  const products = useSelector(state => state.products);
+  const products = useSelector((state) => state.get('products'))
+  .toJS();
+  console.log("🚀 ~ file: App.js ~ line 17 ~ App ~ products", products)
+  // const loading = useSelector(state => state.loading)
+  const loading = false
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchProducts = async () => {
+      // dispatch(setLoading(true))
       const productsRes = await getProducts();
       dispatch(setProducts(productsRes));
+      // dispatch(setLoading(false))
     };
 
     fetchProducts();
@@ -31,7 +39,13 @@ function App() {
       <Col span={8} offset={8}>
         <Searcher />
       </Col>
-      <ProductList products={products} />
+      {
+        loading 
+          ? <Col offset={12} >
+              <Spin spinning size='large' />
+            </Col>
+          : <ProductList products={products} />
+      }
     </div>
   );
 }

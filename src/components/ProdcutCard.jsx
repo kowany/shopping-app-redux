@@ -1,16 +1,36 @@
-import { StarOutlined } from "@ant-design/icons";
+import { useDispatch } from "react-redux";
 import { Card } from "antd";
 import Meta from "antd/lib/card/Meta";
+import StarButton from "./StarButton";
+import { setFavorite } from "../actions";
 
-const ProductCard = ({title}) => {
+const ProductCard = ({
+  title,
+  image,
+  category,
+  description,
+  id,
+  favorite,
+  price,
+}) => {
+  const dispatch = useDispatch();
+
+  const handleOnFavorite = () => {
+    dispatch(setFavorite({ productId: id }));
+  };
+
+  const priceFormat = price.toFixed(2);
   return (
     <Card
       className="card"
       title={title}
-      cover={<img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png" alt="Margarita" />}
-      extra={<StarOutlined />}
+      cover={<img src={image} alt={title} />}
+      extra={<StarButton isFavorite={favorite} onClick={handleOnFavorite} />}
     >
-      <Meta description="tequila, limon" />
+      <Meta
+        title={`$ ${priceFormat}`}
+        description={category}
+      />
     </Card>
   );
 };
